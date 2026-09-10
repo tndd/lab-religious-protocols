@@ -1,0 +1,45 @@
+column,role,description
+cue_id,key,Stable internal cue identifier
+source_family,source,Initial acquisition bucket only; not a theological ground truth
+source_category,source,Wikimedia category or other acquisition source
+source_page_url,provenance,Human-readable source/file page
+media_url,provenance,Original media URL; do not treat as permanent archive without hashing
+creator,license,Creator/author metadata
+license_short,license,Per-file license label
+license_url,license,License URL where available
+attribution,license,Stored attribution/credit string
+retrieved_at,provenance,Acquisition timestamp
+sha256,provenance,Hash after local download in later stage
+media_type,physical,Image/audio/video/text
+width,physical,Pixel width when image
+height,physical,Pixel height when image
+documented_provenance,reference,Independent historical/institutional provenance note
+provenance_labels,reference,Multi-label provenance categories
+provenance_confidence,reference,Confidence with written justification elsewhere
+boundedness,exposure,Rated onset/offset boundedness
+persistence,exposure,Environmental persistence
+recurrence,exposure,Expected recurrence/repeated encounter
+focality,exposure,Attentional foregrounding
+intentionality,exposure,Intentionality of encounter/participation
+environmental_embeddedness,exposure,How embedded cue is in ordinary environment
+co_presence,exposure,Social co-presence
+synchrony,exposure,Behavioral/temporal synchrony
+arousal,exposure,Arousal/intensity
+modality,exposure,Sensory modality or multimodality
+perceptual_salience,confound,Generic perceptual salience
+clutter,confound,Scene clutter
+text_density,confound,Visible textual content density
+scene_complexity,confound,Generic scene complexity
+familiarity,receiver_reference,Reference-panel familiarity distribution or summary
+perceived_religiousness,receiver_reference,Reference-panel religiousness distribution
+perceived_sacredness,receiver_reference,Reference-panel sacredness distribution
+attribution_distribution,receiver_reference,Empirical multi-label/group attribution distribution
+expected_action_distribution,receiver_reference,Empirical next-action distribution
+polysemy_entropy,receiver_reference,Descriptive disagreement/entropy after target definition
+consensus_regime,model,hard_documented / one_consensus / multi_consensus / unresolved
+reference_groups,model,Explicit groups used for reference distributions
+hard_target_eligible,model,Whether a defensible hard-ish target exists
+control_pair_id,design,Matched control identifier
+calibration_split,design,Calibration/evaluation assignment after validation
+exclusion_reason,design,Blank unless excluded from final battery
+notes,design,Free text
