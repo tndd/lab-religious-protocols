@@ -1,0 +1,6 @@
+{
+  "target_ref": "b399c96d51f4e0337a268a85cc8928c4b777421a",
+  "job": "synthetic-002-logit",
+  "requested_by": "chatgpt",
+  "note": "Initial automated Kaggle pipeline test"
+}
