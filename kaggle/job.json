@@ -1,5 +1,5 @@
 {
-  "name": "consensus-gate-false-pass-sweep",
-  "command": "pytest -q && python experiments/synthetic_005_consensus_gate.py",
+  "name": "held-out-predictive-rescue",
+  "command": "pytest -q && python experiments/synthetic_006_predictive_rescue.py",
   "results_dir": "results"
 }
