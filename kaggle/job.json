@@ -1,5 +1,5 @@
 {
-  "name": "held-out-predictive-rescue",
-  "command": "pytest -q && python experiments/synthetic_006_predictive_rescue.py",
+  "name": "commons-candidate-harvest",
+  "command": "python scripts/commons_harvest.py",
   "results_dir": "results"
 }
