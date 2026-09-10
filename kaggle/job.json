@@ -1,5 +1,5 @@
 {
-  "name": "synthetic-002-logit",
-  "command": "python experiments/synthetic_002_logit.py",
+  "name": "measurement-recovery-and-plural-codebook-sweep",
+  "command": "pytest -q && python experiments/synthetic_003_consensus.py && python experiments/synthetic_004_failure_surface.py",
   "results_dir": "results"
 }
