@@ -1,5 +1,5 @@
 {
-  "name": "measurement-recovery-and-plural-codebook-sweep",
-  "command": "pytest -q && python experiments/synthetic_003_consensus.py && python experiments/synthetic_004_failure_surface.py",
+  "name": "consensus-gate-false-pass-sweep",
+  "command": "pytest -q && python experiments/synthetic_005_consensus_gate.py",
   "results_dir": "results"
 }
