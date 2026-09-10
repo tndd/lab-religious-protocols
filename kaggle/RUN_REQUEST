@@ -1,6 +1,6 @@
 {
-  "target_ref": "94146905e3ef9e82a309a05e4b1bfd4f9554eddd",
-  "job": "measurement-recovery-and-plural-codebook-sweep",
+  "target_ref": "9e8c2564090a7adec29f588c626e7bbe490b8407",
+  "job": "consensus-gate-false-pass-sweep",
   "requested_by": "chatgpt",
-  "note": "Recover latent codebook competence and map single-consensus bias across subgroup share x divergent-cue share."
+  "note": "Test whether the informal 3:1 one-factor screen can pass despite >=0.10 minority competence bias; verify analytic bias formula."
 }
