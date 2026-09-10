@@ -1,0 +1,5 @@
+{
+  "name": "synthetic-002-logit",
+  "command": "python experiments/synthetic_002_logit.py",
+  "results_dir": "results"
+}
