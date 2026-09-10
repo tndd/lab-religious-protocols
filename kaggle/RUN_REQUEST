@@ -1,6 +1,6 @@
 {
-  "target_ref": "b399c96d51f4e0337a268a85cc8928c4b777421a",
-  "job": "synthetic-002-logit",
+  "target_ref": "94146905e3ef9e82a309a05e4b1bfd4f9554eddd",
+  "job": "measurement-recovery-and-plural-codebook-sweep",
   "requested_by": "chatgpt",
-  "note": "Initial automated Kaggle pipeline test"
+  "note": "Recover latent codebook competence and map single-consensus bias across subgroup share x divergent-cue share."
 }
