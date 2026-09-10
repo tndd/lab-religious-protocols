@@ -1,6 +1,6 @@
 {
-  "target_ref": "9e8c2564090a7adec29f588c626e7bbe490b8407",
-  "job": "consensus-gate-false-pass-sweep",
+  "target_ref": "67da8421794c44776ac41d24510ec609ddbf30f5",
+  "job": "held-out-predictive-rescue",
   "requested_by": "chatgpt",
-  "note": "Test whether the informal 3:1 one-factor screen can pass despite >=0.10 minority competence bias; verify analytic bias formula."
+  "note": "Compare pooled versus stratum-specific cultural references by held-out respondent/item log score; test whether predictive validation reveals structure missed by the simple 3:1 screen."
 }
