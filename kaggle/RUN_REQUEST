@@ -1,6 +1,6 @@
 {
-  "target_ref": "bdb9f956c897a08285334fb2cc412cd423b0366b",
+  "target_ref": "8f53db6c8ef1115d5e989eca2ea0cb5c5e995ee2",
   "job": "commons-candidate-harvest",
   "requested_by": "chatgpt",
-  "note": "Harvest metadata-only candidate cue pool from Wikimedia Commons categories, preserving per-file author/license/source metadata; category membership remains acquisition metadata, not ground truth."
+  "note": "Retry after hardening Wikimedia user-agent, retry/backoff, and per-bucket diagnostics."
 }
