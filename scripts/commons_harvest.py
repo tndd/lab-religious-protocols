@@ -1,9 +1,8 @@
 """Harvest an initial open-media candidate pool from Wikimedia Commons.
 
-The script stores metadata only; it does not declare that Commons category
-membership is a theological or empirical ground truth. Per-file license and
-attribution metadata are retained because Commons files can have different
-reuse requirements.
+Acquisition metadata only: Commons category membership is not treated as
+religious ground truth. The harvester is deliberately fault-tolerant so a
+single HTTP/category failure does not erase the rest of a long batch.
 """
 
 from __future__ import annotations
@@ -15,12 +14,17 @@ import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode
 from urllib.request import Request, urlopen
 
 API = "https://commons.wikimedia.org/w/api.php"
-USER_AGENT = "lab-religious-protocols/0.1 research prototype"
+USER_AGENT = (
+    "lab-religious-protocols/0.2 "
+    "(research prototype; https://github.com/tndd/lab-religious-protocols)"
+)
 PER_BUCKET = 18
+MAX_RETRIES = 5
 
 BUCKETS = [
     ("shinto", "Category:Torii in Japan"),
@@ -39,10 +43,30 @@ BUCKETS = [
 
 
 def api(params: dict[str, str | int]) -> dict:
-    q = {"format": "json", "formatversion": 2, **params}
-    req = Request(f"{API}?{urlencode(q)}", headers={"User-Agent": USER_AGENT})
-    with urlopen(req, timeout=60) as r:
-        return json.load(r)
+    q = {"format": "json", "formatversion": 2, "maxlag": 5, **params}
+    url = f"{API}?{urlencode(q)}"
+    last_error: Exception | None = None
+    for attempt in range(MAX_RETRIES):
+        req = Request(
+            url,
+            headers={
+                "User-Agent": USER_AGENT,
+                "Accept": "application/json",
+                "Accept-Encoding": "identity",
+            },
+        )
+        try:
+            with urlopen(req, timeout=60) as r:
+                data = json.load(r)
+            if "error" in data:
+                raise RuntimeError(f"MediaWiki API error: {data['error']}")
+            return data
+        except (HTTPError, URLError, TimeoutError, RuntimeError) as exc:
+            last_error = exc
+            if isinstance(exc, HTTPError) and exc.code not in {429, 500, 502, 503, 504}:
+                break
+            time.sleep(min(2**attempt, 16))
+    raise RuntimeError(f"Commons request failed after retries: {url}: {last_error}")
 
 
 def strip_html(value: str | None) -> str:
@@ -58,7 +82,7 @@ def ext(meta: dict, name: str) -> str:
 
 
 def direct_files(category: str, limit: int) -> list[dict]:
-    rows = []
+    rows: list[dict] = []
     cont: dict[str, str] = {}
     while len(rows) < limit:
         data = api(
@@ -102,8 +126,17 @@ def files_with_one_level(category: str, limit: int) -> list[dict]:
         if len(found) >= limit:
             break
         found.extend(direct_files(subcat, limit - len(found)))
-        time.sleep(0.03)
+        time.sleep(0.1)
     return found[:limit]
+
+
+def write_csv(path: Path, records: list[dict]) -> None:
+    if not records:
+        return
+    with path.open("w", newline="", encoding="utf-8") as f:
+        writer = csv.DictWriter(f, fieldnames=list(records[0]))
+        writer.writeheader()
+        writer.writerows(records)
 
 
 def main() -> None:
@@ -111,10 +144,24 @@ def main() -> None:
     out.mkdir(exist_ok=True)
     retrieved = datetime.now(timezone.utc).isoformat()
 
-    records = []
+    records: list[dict] = []
+    failures: list[dict] = []
     seen: set[str] = set()
+
     for family, category in BUCKETS:
-        pages = files_with_one_level(category, PER_BUCKET)
+        try:
+            pages = files_with_one_level(category, PER_BUCKET)
+        except Exception as exc:  # keep the batch alive and preserve diagnostics
+            failure = {
+                "source_family": family,
+                "source_category": category,
+                "error_type": type(exc).__name__,
+                "error": str(exc),
+            }
+            failures.append(failure)
+            print("FAILED", json.dumps(failure, ensure_ascii=False))
+            continue
+
         for page in pages:
             info = (page.get("imageinfo") or [{}])[0]
             mime = info.get("mime", "")
@@ -151,17 +198,18 @@ def main() -> None:
                 }
             )
         print(f"{category}: {len(pages)} candidate pages")
+        time.sleep(0.2)
 
     csv_path = out / "commons_candidate_catalog.csv"
-    if records:
-        with csv_path.open("w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=list(records[0]))
-            writer.writeheader()
-            writer.writerows(records)
+    write_csv(csv_path, records)
+    (out / "commons_harvest_failures.json").write_text(
+        json.dumps(failures, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
 
     summary = {
         "retrieved_at": retrieved,
         "n_unique_candidates": len(records),
+        "n_failed_buckets": len(failures),
         "counts_by_family": {},
         "categories": [c for _, c in BUCKETS],
         "warning": (
@@ -178,6 +226,10 @@ def main() -> None:
 
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     print(f"Wrote: {csv_path.resolve()}")
+
+    # A totally empty harvest is a real failure, but diagnostics are now preserved.
+    if not records:
+        raise RuntimeError("Commons harvest returned zero candidates; inspect failure JSON")
 
 
 if __name__ == "__main__":
