@@ -1,6 +1,6 @@
 {
-  "target_ref": "8f53db6c8ef1115d5e989eca2ea0cb5c5e995ee2",
-  "job": "commons-candidate-harvest",
+  "target_ref": "6cd37b56ff4604768e79251ef2e82b05c4c2f919",
+  "job": "commons-candidate-harvest-v2",
   "requested_by": "chatgpt",
-  "note": "Retry after hardening Wikimedia user-agent, retry/backoff, and per-bucket diagnostics."
+  "note": "Balanced religious/secular candidate harvest, technical QC, and automatic persistence of selected results back into results_snapshots."
 }
