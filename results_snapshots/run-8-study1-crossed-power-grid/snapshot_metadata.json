@@ -1,0 +1,12 @@
+{
+  "job": "study1-crossed-power-grid",
+  "target_ref": "2c3e03301175906ef606bd570fbaa60f4337e839",
+  "github_trigger_sha": "ab624a5002d3ee2b1f01b6f73f2119189e67127a",
+  "workflow_run_number": "8",
+  "persisted_files": [
+    "run_metadata.json",
+    "synthetic_007_power_ge80.csv",
+    "synthetic_007_power_grid.csv",
+    "synthetic_007_power_summary.json"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "seed": 20260923,
+  "reps_per_cell": 120,
+  "n_simulations": 9600,
+  "participant_grid": [
+    80,
+    120,
+    180,
+    240
+  ],
+  "cue_grid": [
+    36,
+    48,
+    60,
+    72
+  ],
+  "interaction_grid": [
+    0.0,
+    0.05,
+    0.1,
+    0.15,
+    0.2
+  ],
+  "variance_assumptions": {
+    "participant_intercept_sd": 0.45,
+    "cue_intercept_sd": 0.45,
+    "participant_theta_slope_sd": 0.2,
+    "cue_K_slope_sd": 0.2,
+    "residual_sd": 1.0
+  },
+  "mean_null_rejection_two_way": 0.06822916666666667,
+  "mean_null_rejection_naive": 0.425,
+  "max_null_rejection_two_way": 0.10833333333333334,
+  "max_null_rejection_naive": 0.575,
+  "median_se_inflation": 2.2685533731626304,
+  "warning": "Synthetic planning stress test only. Replace variance components and effect-size priors with pilot estimates before preregistration."
+}

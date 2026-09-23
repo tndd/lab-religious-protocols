@@ -1,0 +1,6 @@
+{
+  "target_ref": "2c3e03301175906ef606bd570fbaa60f4337e839",
+  "job": "study1-crossed-power-grid",
+  "command": "pytest -q && python experiments/synthetic_007_power_grid.py",
+  "completed_at_utc": "2026-09-23T10:03:34.855187+00:00"
+}
