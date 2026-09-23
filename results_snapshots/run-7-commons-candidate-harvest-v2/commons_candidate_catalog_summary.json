@@ -1,0 +1,119 @@
+{
+  "retrieved_at": "2026-09-23T09:57:56.351731+00:00",
+  "n_unique_candidates": 309,
+  "n_failed_buckets": 0,
+  "counts_by_family": {
+    "shinto": 76,
+    "mixed": 53,
+    "buddhist": 72,
+    "christian": 18,
+    "secular_control": 90
+  },
+  "counts_by_role_hint": {
+    "threshold": 36,
+    "boundary_marker": 18,
+    "household_display": 54,
+    "votive_object": 36,
+    "embedded_streetscape": 4,
+    "portable_object": 18,
+    "textual_object": 18,
+    "purification_installation": 17,
+    "small_wayside_structure": 18,
+    "architecture_context": 36,
+    "street_object": 36,
+    "street_context": 18
+  },
+  "buckets": [
+    {
+      "family": "shinto",
+      "role": "threshold",
+      "category": "Category:Torii in Japan"
+    },
+    {
+      "family": "shinto",
+      "role": "boundary_marker",
+      "category": "Category:Shimenawa"
+    },
+    {
+      "family": "shinto",
+      "role": "household_display",
+      "category": "Category:Kamidana"
+    },
+    {
+      "family": "shinto",
+      "role": "votive_object",
+      "category": "Category:Ema (Shinto)"
+    },
+    {
+      "family": "shinto",
+      "role": "embedded_streetscape",
+      "category": "Category:Wayside Shrines in Kyoto"
+    },
+    {
+      "family": "mixed",
+      "role": "portable_object",
+      "category": "Category:Omamori"
+    },
+    {
+      "family": "mixed",
+      "role": "textual_object",
+      "category": "Category:Omikuji"
+    },
+    {
+      "family": "mixed",
+      "role": "purification_installation",
+      "category": "Category:Chōzuya"
+    },
+    {
+      "family": "buddhist",
+      "role": "small_wayside_structure",
+      "category": "Category:Jizō-dō"
+    },
+    {
+      "family": "buddhist",
+      "role": "household_display",
+      "category": "Category:Butsudan"
+    },
+    {
+      "family": "buddhist",
+      "role": "votive_object",
+      "category": "Category:Ema (Buddhism)"
+    },
+    {
+      "family": "buddhist",
+      "role": "architecture_context",
+      "category": "Category:Buddhist temples in Japan"
+    },
+    {
+      "family": "christian",
+      "role": "architecture_context",
+      "category": "Category:Churches in Japan"
+    },
+    {
+      "family": "secular_control",
+      "role": "threshold",
+      "category": "Category:Gates in Japan"
+    },
+    {
+      "family": "secular_control",
+      "role": "street_object",
+      "category": "Category:Bus stops in Japan"
+    },
+    {
+      "family": "secular_control",
+      "role": "street_context",
+      "category": "Category:Streets in Kyoto"
+    },
+    {
+      "family": "secular_control",
+      "role": "household_display",
+      "category": "Category:Tokonoma"
+    },
+    {
+      "family": "secular_control",
+      "role": "street_object",
+      "category": "Category:Vending machines in Kyoto"
+    }
+  ],
+  "warning": "Family/category/role fields are acquisition metadata only. Independent Study 0 validation must establish provenance, perceived religiousness, salience, and interpretive distributions."
+}

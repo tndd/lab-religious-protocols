@@ -1,0 +1,14 @@
+{
+  "n_candidates": 309,
+  "n_technical_pass": 282,
+  "technical_pass_rate": 0.912621359223301,
+  "n_low_resolution": 22,
+  "n_tiny": 11,
+  "n_non_raster": 5,
+  "n_missing_creator": 6,
+  "n_missing_description": 10,
+  "n_nonstandard_license": 3,
+  "n_archival_or_diagram_flag": 10,
+  "n_manual_review_rows": 39,
+  "note": "technical_pass is not Study 0 validation. Religious provenance, perceived religiousness, polysemy, focality and stimulus role require independent review."
+}

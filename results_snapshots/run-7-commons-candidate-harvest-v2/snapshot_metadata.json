@@ -1,0 +1,16 @@
+{
+  "job": "commons-candidate-harvest-v2",
+  "target_ref": "6cd37b56ff4604768e79251ef2e82b05c4c2f919",
+  "github_trigger_sha": "608e9d8ee61aaa331975b92d33026063afee7b6a",
+  "workflow_run_number": "7",
+  "persisted_files": [
+    "commons_candidate_catalog.csv",
+    "commons_candidate_catalog_qc.csv",
+    "commons_candidate_catalog_summary.json",
+    "commons_catalog_manual_review.csv",
+    "commons_catalog_qc_by_category.csv",
+    "commons_catalog_qc_summary.json",
+    "commons_harvest_failures.json",
+    "run_metadata.json"
+  ]
+}
