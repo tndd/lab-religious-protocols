@@ -1,8 +1,8 @@
-"""Harvest an initial open-media candidate pool from Wikimedia Commons.
+"""Harvest a balanced open-media candidate pool from Wikimedia Commons.
 
-Acquisition metadata only: Commons category membership is not treated as
-religious ground truth. The harvester is deliberately fault-tolerant so a
-single HTTP/category failure does not erase the rest of a long batch.
+Commons categories are acquisition routes, never theological or empirical ground truth.
+Each bucket carries only a *role hint* used to construct visually comparable candidate
+sets before independent Study 0 validation.
 """
 
 from __future__ import annotations
@@ -20,25 +20,35 @@ from urllib.request import Request, urlopen
 
 API = "https://commons.wikimedia.org/w/api.php"
 USER_AGENT = (
-    "lab-religious-protocols/0.2 "
+    "lab-religious-protocols/0.3 "
     "(research prototype; https://github.com/tndd/lab-religious-protocols)"
 )
 PER_BUCKET = 18
 MAX_RETRIES = 5
 
 BUCKETS = [
-    ("shinto", "Category:Torii in Japan"),
-    ("shinto", "Category:Shimenawa"),
-    ("shinto", "Category:Kamidana"),
-    ("shinto", "Category:Ema (Shinto)"),
-    ("mixed", "Category:Omamori"),
-    ("mixed", "Category:Omikuji"),
-    ("mixed", "Category:Chōzuya"),
-    ("buddhist", "Category:Jizō-dō"),
-    ("buddhist", "Category:Butsudan"),
-    ("buddhist", "Category:Ema (Buddhism)"),
-    ("buddhist", "Category:Buddhist temples in Japan"),
-    ("christian", "Category:Churches in Japan"),
+    # Religious / culturally mixed acquisition routes
+    {"family": "shinto", "role": "threshold", "category": "Category:Torii in Japan"},
+    {"family": "shinto", "role": "boundary_marker", "category": "Category:Shimenawa"},
+    {"family": "shinto", "role": "household_display", "category": "Category:Kamidana"},
+    {"family": "shinto", "role": "votive_object", "category": "Category:Ema (Shinto)"},
+    {"family": "shinto", "role": "embedded_streetscape", "category": "Category:Wayside Shrines in Kyoto"},
+    {"family": "mixed", "role": "portable_object", "category": "Category:Omamori"},
+    {"family": "mixed", "role": "textual_object", "category": "Category:Omikuji"},
+    {"family": "mixed", "role": "purification_installation", "category": "Category:Chōzuya"},
+    {"family": "buddhist", "role": "small_wayside_structure", "category": "Category:Jizō-dō"},
+    {"family": "buddhist", "role": "household_display", "category": "Category:Butsudan"},
+    {"family": "buddhist", "role": "votive_object", "category": "Category:Ema (Buddhism)"},
+    {"family": "buddhist", "role": "architecture_context", "category": "Category:Buddhist temples in Japan"},
+    {"family": "christian", "role": "architecture_context", "category": "Category:Churches in Japan"},
+
+    # Matched secular acquisition routes. These are not assumed to be "neutral";
+    # they are candidate controls for visual/scene roles that Study 0 must validate.
+    {"family": "secular_control", "role": "threshold", "category": "Category:Gates in Japan"},
+    {"family": "secular_control", "role": "street_object", "category": "Category:Bus stops in Japan"},
+    {"family": "secular_control", "role": "street_context", "category": "Category:Streets in Kyoto"},
+    {"family": "secular_control", "role": "household_display", "category": "Category:Tokonoma"},
+    {"family": "secular_control", "role": "street_object", "category": "Category:Vending machines in Kyoto"},
 ]
 
 
@@ -94,7 +104,7 @@ def direct_files(category: str, limit: int) -> list[dict]:
                 "gcmlimit": min(50, limit - len(rows)),
                 "prop": "imageinfo",
                 "iiprop": "url|size|mime|extmetadata",
-                "iiurlwidth": 768,
+                "iiurlwidth": 960,
                 **cont,
             }
         )
@@ -105,7 +115,7 @@ def direct_files(category: str, limit: int) -> list[dict]:
     return rows[:limit]
 
 
-def subcategories(category: str, limit: int = 30) -> list[str]:
+def subcategories(category: str, limit: int = 40) -> list[str]:
     data = api(
         {
             "action": "query",
@@ -148,12 +158,16 @@ def main() -> None:
     failures: list[dict] = []
     seen: set[str] = set()
 
-    for family, category in BUCKETS:
+    for bucket in BUCKETS:
+        family = bucket["family"]
+        role = bucket["role"]
+        category = bucket["category"]
         try:
             pages = files_with_one_level(category, PER_BUCKET)
-        except Exception as exc:  # keep the batch alive and preserve diagnostics
+        except Exception as exc:
             failure = {
                 "source_family": family,
+                "acquisition_role_hint": role,
                 "source_category": category,
                 "error_type": type(exc).__name__,
                 "error": str(exc),
@@ -176,6 +190,7 @@ def main() -> None:
                 {
                     "cue_id": f"commons-{len(records)+1:04d}",
                     "source_family": family,
+                    "acquisition_role_hint": role,
                     "source_category": category,
                     "commons_pageid": page.get("pageid", ""),
                     "commons_title": title,
@@ -206,20 +221,25 @@ def main() -> None:
         json.dumps(failures, ensure_ascii=False, indent=2), encoding="utf-8"
     )
 
+    counts_by_family: dict[str, int] = {}
+    counts_by_role: dict[str, int] = {}
+    for r in records:
+        counts_by_family[r["source_family"]] = counts_by_family.get(r["source_family"], 0) + 1
+        counts_by_role[r["acquisition_role_hint"]] = counts_by_role.get(r["acquisition_role_hint"], 0) + 1
+
     summary = {
         "retrieved_at": retrieved,
         "n_unique_candidates": len(records),
         "n_failed_buckets": len(failures),
-        "counts_by_family": {},
-        "categories": [c for _, c in BUCKETS],
+        "counts_by_family": counts_by_family,
+        "counts_by_role_hint": counts_by_role,
+        "buckets": BUCKETS,
         "warning": (
-            "Category membership is acquisition metadata only. Verify each "
-            "file page/license and independently document provenance before use."
+            "Family/category/role fields are acquisition metadata only. "
+            "Independent Study 0 validation must establish provenance, perceived "
+            "religiousness, salience, and interpretive distributions."
         ),
     }
-    for r in records:
-        fam = r["source_family"]
-        summary["counts_by_family"][fam] = summary["counts_by_family"].get(fam, 0) + 1
     (out / "commons_candidate_catalog_summary.json").write_text(
         json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
     )
@@ -227,7 +247,6 @@ def main() -> None:
     print(json.dumps(summary, ensure_ascii=False, indent=2))
     print(f"Wrote: {csv_path.resolve()}")
 
-    # A totally empty harvest is a real failure, but diagnostics are now preserved.
     if not records:
         raise RuntimeError("Commons harvest returned zero candidates; inspect failure JSON")
 
