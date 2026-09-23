@@ -1,5 +1,15 @@
 {
-  "name": "commons-candidate-harvest",
-  "command": "python scripts/commons_harvest.py",
-  "results_dir": "results"
+  "name": "commons-candidate-harvest-v2",
+  "command": "python scripts/commons_harvest.py && python scripts/catalog_qc.py",
+  "results_dir": "results",
+  "persist_globs": [
+    "commons_candidate_catalog.csv",
+    "commons_candidate_catalog_summary.json",
+    "commons_harvest_failures.json",
+    "commons_candidate_catalog_qc.csv",
+    "commons_catalog_qc_summary.json",
+    "commons_catalog_qc_by_category.csv",
+    "commons_catalog_manual_review.csv",
+    "run_metadata.json"
+  ]
 }
