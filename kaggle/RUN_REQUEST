@@ -1,6 +1,6 @@
 {
-  "target_ref": "6cd37b56ff4604768e79251ef2e82b05c4c2f919",
-  "job": "commons-candidate-harvest-v2",
+  "target_ref": "2c3e03301175906ef606bd570fbaa60f4337e839",
+  "job": "study1-crossed-power-grid",
   "requested_by": "chatgpt",
-  "note": "Balanced religious/secular candidate harvest, technical QC, and automatic persistence of selected results back into results_snapshots."
+  "note": "Monte Carlo power surface for receiver-profile x exposure interaction with participant/cue random intercepts and relevant random slopes; two-way cluster-robust inference."
 }
