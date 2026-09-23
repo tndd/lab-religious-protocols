@@ -7,8 +7,12 @@ on:
       - "kaggle/RUN_REQUEST"
   workflow_dispatch:
 
+concurrency:
+  group: kaggle-compute
+  cancel-in-progress: false
+
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   compute:
@@ -68,3 +72,58 @@ jobs:
           path: kaggle-output/
           if-no-files-found: error
           retention-days: 30
+
+      - name: Persist selected result snapshots
+        shell: bash
+        env:
+          RUN_NUMBER: ${{ github.run_number }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import re
+          import shutil
+          from pathlib import Path
+
+          job = json.loads(Path("kaggle/job.json").read_text())
+          request = json.loads(Path("kaggle/RUN_REQUEST").read_text())
+          patterns = job.get("persist_globs", [])
+          if not patterns:
+              print("No persist_globs configured; artifact-only run.")
+              raise SystemExit(0)
+
+          src = Path("kaggle-output") / job.get("results_dir", "results")
+          safe_name = re.sub(r"[^A-Za-z0-9._-]+", "-", job["name"]).strip("-")
+          dest = Path("results_snapshots") / f"run-{os.environ['RUN_NUMBER']}-{safe_name}"
+          dest.mkdir(parents=True, exist_ok=True)
+
+          copied = []
+          for pattern in patterns:
+              for path in src.glob(pattern):
+                  if path.is_file():
+                      target = dest / path.name
+                      shutil.copy2(path, target)
+                      copied.append(path.name)
+
+          metadata = {
+              "job": job["name"],
+              "target_ref": request.get("target_ref"),
+              "github_trigger_sha": os.environ.get("GITHUB_SHA"),
+              "workflow_run_number": os.environ["RUN_NUMBER"],
+              "persisted_files": sorted(set(copied)),
+          }
+          (dest / "snapshot_metadata.json").write_text(
+              json.dumps(metadata, indent=2) + "\n", encoding="utf-8"
+          )
+          print("Persisted:", sorted(set(copied)))
+          PY
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add results_snapshots/
+          if git diff --cached --quiet; then
+            echo "No snapshot changes to commit."
+          else
+            git commit -m "Snapshot Kaggle results run ${GITHUB_RUN_NUMBER}"
+            git push
+          fi
